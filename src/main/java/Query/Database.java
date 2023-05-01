@@ -3,11 +3,9 @@ package Query;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.SneakyThrows;
 
-import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.SQLException;
-import java.sql.Statement;
+import java.sql.*;
 
 @AllArgsConstructor
 @NoArgsConstructor
@@ -20,10 +18,13 @@ public enum Database {
 
     private String data;
 
-    public void getConnection() {
-        try (Connection connection = DriverManager.getConnection(Database.URL.getData(), Database.USER.getData(), Database.PASSWORD.getData());
-             Statement statement = connection.createStatement()) {
+    public Connection getConnection()  {
+        try {
+            Connection connection = DriverManager.getConnection(Database.URL.getData(), Database.USER.getData(), Database.PASSWORD.getData());
+            Statement statement = connection.createStatement();
             System.out.println("The database is running: " + !statement.isClosed());
+            statement.close();
+            return connection;
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
@@ -38,12 +39,18 @@ public enum Database {
         }
     }
 
-    public void populateQuery(String sqlQuery) {
-        try (Connection connection = DriverManager.getConnection(Database.URL.getData(), Database.USER.getData(), Database.PASSWORD.getData());
-             Statement statement = connection.createStatement()) {
-            statement.executeUpdate(sqlQuery);
+    @SneakyThrows
+    public void populateQuery(String sqlQuery, Connection connection) {
+        try (PreparedStatement statement = connection.prepareStatement(sqlQuery);
+             connection) {
+            connection.setAutoCommit(false);
+            statement.addBatch();
+            statement.executeBatch();
+            connection.commit();
         } catch (SQLException e) {
-            throw new RuntimeException(e);
+            connection.rollback();
+        } finally {
+            connection.setAutoCommit(true);
         }
     }
 }

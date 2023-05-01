@@ -1,4 +1,3 @@
---Task_4
 select name, count(project.client_id) as max_project from client
 join project on client.id = project.client_id
 group by name

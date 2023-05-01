@@ -9,11 +9,12 @@ import java.util.List;
 
 
 public class DatabaseQueryService extends File {
-    public List<MaxSalaryWorker> findMaxSalaryWorker() {
+    public List<MaxSalaryWorker> findMaxSalaryWorker(Connection connection) {
         String sql = new DatabaseQueryService().readFile("src/main/resources/DB/find_max_salary_worker.sql");
-        try (Connection connection = DriverManager.getConnection(Database.URL.getData(), Database.USER.getData(), Database.PASSWORD.getData());
-             Statement statement = connection.createStatement();
-             ResultSet rs = statement.executeQuery(sql)) {
+        try (PreparedStatement statement = connection.prepareStatement(sql);
+             ResultSet rs = statement.executeQuery();
+             connection) {
+
             List<MaxSalaryWorker> msw = new LinkedList<>();
             while(rs.next()){
                 msw.add(new MaxSalaryWorker(rs.getString("name"),rs.getInt("max_salary")));
@@ -24,11 +25,11 @@ public class DatabaseQueryService extends File {
         }
     }
 
-    public List<MaxProjectsClient> findMaxProjectsClient() {
+    public List<MaxProjectsClient> findMaxProjectsClient(Connection connection) {
         String sql = new DatabaseQueryService().readFile("src/main/resources/DB/find_max_projects_client.sql");
-        try (Connection connection = DriverManager.getConnection(Database.URL.getData(), Database.USER.getData(), Database.PASSWORD.getData());
-             Statement statement = connection.createStatement();
-             ResultSet rs = statement.executeQuery(sql)) {
+        try (PreparedStatement statement = connection.prepareStatement(sql);
+             ResultSet rs = statement.executeQuery();
+             connection) {
             List<MaxProjectsClient> mpc = new LinkedList<>();
             while(rs.next()){
                 mpc.add(new MaxProjectsClient(rs.getString("name"),rs.getInt("max_project")));
@@ -39,14 +40,14 @@ public class DatabaseQueryService extends File {
         }
     }
 
-    public List<LongestProject> findLongestProject() {
+    public List<LongestProject> findLongestProject(Connection connection) {
         String sql = new DatabaseQueryService().readFile("src/main/resources/DB/find_longest_project.sql");
-        try (Connection connection = DriverManager.getConnection(Database.URL.getData(), Database.USER.getData(), Database.PASSWORD.getData());
-             Statement statement = connection.createStatement();
-             ResultSet rs = statement.executeQuery(sql)) {
+        try (PreparedStatement statement = connection.prepareStatement(sql);
+             ResultSet rs = statement.executeQuery();
+             connection) {
             List<LongestProject> lp = new LinkedList<>();
-            while(rs.next()){
-                lp.add(new LongestProject(rs.getInt("id"),rs.getInt("month_count")));
+            while (rs.next()) {
+                lp.add(new LongestProject(rs.getInt("id"), rs.getInt("month_count")));
             }
             return lp;
         } catch (SQLException e) {
@@ -54,11 +55,11 @@ public class DatabaseQueryService extends File {
         }
     }
 
-    public List<YoungestEldestWorkers> findYoungestEldestWorkers() {
+    public List<YoungestEldestWorkers> findYoungestEldestWorkers(Connection connection) {
         String sql = new DatabaseQueryService().readFile("src/main/resources/DB/find_youngest_eldest_workers.sql");
-        try (Connection connection = DriverManager.getConnection(Database.URL.getData(), Database.USER.getData(), Database.PASSWORD.getData());
-             Statement statement = connection.createStatement();
-             ResultSet rs = statement.executeQuery(sql)) {
+        try (PreparedStatement statement = connection.prepareStatement(sql);
+             ResultSet rs = statement.executeQuery();
+             connection) {
             List<YoungestEldestWorkers> yew = new LinkedList<>();
             while(rs.next()){
                 yew.add(new YoungestEldestWorkers(rs.getString("name"), LocalDate.parse(rs.getString("birthday")),
@@ -70,11 +71,11 @@ public class DatabaseQueryService extends File {
         }
     }
 
-    public List<ProjectPrices> findProjectPrices() {
+    public List<ProjectPrices> findProjectPrices(Connection connection) {
         String sql = new DatabaseQueryService().readFile("src/main/resources/DB/print_project_prices.sql");
-        try (Connection connection = DriverManager.getConnection(Database.URL.getData(), Database.USER.getData(), Database.PASSWORD.getData());
-             Statement statement = connection.createStatement();
-             ResultSet rs = statement.executeQuery(sql)) {
+        try (PreparedStatement statement = connection.prepareStatement(sql);
+             ResultSet rs = statement.executeQuery();
+             connection) {
             List<ProjectPrices> yew = new LinkedList<>();
             while(rs.next()){
                 yew.add(new ProjectPrices(rs.getInt("id"), rs.getInt("price")));
@@ -86,19 +87,19 @@ public class DatabaseQueryService extends File {
     }
 
     public static void main(String[] args) {
-        List<MaxSalaryWorker> maxSalaryWorker = new DatabaseQueryService().findMaxSalaryWorker();
+        List<MaxSalaryWorker> maxSalaryWorker = new DatabaseQueryService().findMaxSalaryWorker(Database.INSTANCE.getConnection());
         System.out.println(maxSalaryWorker + "\n");
 
-        List<MaxProjectsClient> maxProjectsClient = new DatabaseQueryService().findMaxProjectsClient();
+        List<MaxProjectsClient> maxProjectsClient = new DatabaseQueryService().findMaxProjectsClient(Database.INSTANCE.getConnection());
         System.out.println(maxProjectsClient+ "\n");
 
-        List<LongestProject> longestProject = new DatabaseQueryService().findLongestProject();
+        List<LongestProject> longestProject = new DatabaseQueryService().findLongestProject(Database.INSTANCE.getConnection());
         System.out.println(longestProject+ "\n");
 
-        List<YoungestEldestWorkers> youngestEldestWorkers = new DatabaseQueryService().findYoungestEldestWorkers();
+        List<YoungestEldestWorkers> youngestEldestWorkers = new DatabaseQueryService().findYoungestEldestWorkers(Database.INSTANCE.getConnection());
         System.out.println(youngestEldestWorkers+ "\n");
 
-        List<ProjectPrices> projectPrices = new DatabaseQueryService().findProjectPrices();
+        List<ProjectPrices> projectPrices = new DatabaseQueryService().findProjectPrices(Database.INSTANCE.getConnection());
         System.out.println(projectPrices+ "\n");
     }
 }

@@ -1,4 +1,3 @@
---task_6
 select name, birthday,
 case
  when birthday = (SELECT MIN(birthday) FROM worker) then 'YOUNGEST'
