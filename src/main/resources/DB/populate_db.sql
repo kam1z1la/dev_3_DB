@@ -12,6 +12,7 @@ values
 ('Ivanna','1991-07-05','Senior',5150),
 ('Yaroslav','1989-10-23','Senior',5150);
 
+
 insert into client(name)
 values
 ('Ivan Petrov'),
@@ -36,42 +37,42 @@ values
 
 insert into project_worker(project_id, worker_id)
 values
-(select id from project where starte_date='2023-02-01', select id from worker where name='Oksana'),
+(select id from project where starte_date='2023-02-01', select id from worker where name='Oksana' and level='Trainee'),
 (select id from project where starte_date='2023-02-01', select id from worker where name='Bohdan' and level='Trainee'),
-(select id from project where starte_date='2023-02-01', select id from worker where name='Ivan'),
+(select id from project where starte_date='2023-02-01', select id from worker where name='Ivan'and level='Junior'),
 
-(select id from project where starte_date='2023-12-15', select id from worker where name='Oleksandr'),
-(select id from project where starte_date='2023-12-15', select id from worker where name='Petro'),
-(select id from project where starte_date='2023-12-15', select id from worker where name='Sofia'),
+(select id from project where starte_date='2023-12-15', select id from worker where name='Oleksandr' and level='Junior'),
+(select id from project where starte_date='2023-12-15', select id from worker where name='Petro' and level='Middle'),
+(select id from project where starte_date='2023-12-15', select id from worker where name='Sofia' and level='Middle'),
 (select id from project where starte_date='2023-12-15', select id from worker where name='Bohdan' and level='Middle'),
 
-(select id from project where starte_date='2023-08-01', select id from worker where name='Kateryna'),
-(select id from project where starte_date='2023-08-01', select id from worker where name='Ivanna'),
-(select id from project where starte_date='2023-08-01', select id from worker where name='Yaroslav'),
+(select id from project where starte_date='2023-08-01', select id from worker where name='Kateryna' and level='Middle'),
+(select id from project where starte_date='2023-08-01', select id from worker where name='Ivanna' and level='Senior'),
+(select id from project where starte_date='2023-08-01', select id from worker where name='Yaroslav' and level='Senior'),
 
-(select id from project where starte_date='2023-05-15', select id from worker where name='Kateryna'),
-(select id from project where starte_date='2023-05-15', select id from worker where name='Petro'),
-(select id from project where starte_date='2023-05-15', select id from worker where name='Yaroslav'),
+(select id from project where starte_date='2023-05-15', select id from worker where name='Kateryna' and level='Middle'),
+(select id from project where starte_date='2023-05-15', select id from worker where name='Petro' and level='Middle'),
+(select id from project where starte_date='2023-05-15', select id from worker where name='Yaroslav' and level='Senior'),
 
-(select id from project where starte_date='2023-09-01', select id from worker where name='Petro'),
-(select id from project where starte_date='2023-09-01', select id from worker where name='Yaroslav'),
+(select id from project where starte_date='2023-09-01', select id from worker where name='Petro' and level='Middle'),
+(select id from project where starte_date='2023-09-01', select id from worker where name='Yaroslav'and level='Senior'),
 
-(select id from project where starte_date='2023-11-01', select id from worker where name='Sofia'),
-(select id from project where starte_date='2023-11-01', select id from worker where name='Oleksandr'),
-(select id from project where starte_date='2023-11-01', select id from worker where name='Petro'),
+(select id from project where starte_date='2023-11-01', select id from worker where name='Sofia' and level='Middle'),
+(select id from project where starte_date='2023-11-01', select id from worker where name='Oleksandr' and level='Junior'),
+(select id from project where starte_date='2023-11-01', select id from worker where name='Petro' and level='Middle'),
 
-(select id from project where starte_date='2023-10-15', select id from worker where name='Oleksandr'),
+(select id from project where starte_date='2023-10-15', select id from worker where name='Oleksandr' and level='Junior'),
 (select id from project where starte_date='2023-10-15', select id from worker where name='Bohdan' and level='Middle'),
-(select id from project where starte_date='2023-10-15', select id from worker where name='Petro'),
+(select id from project where starte_date='2023-10-15', select id from worker where name='Petro' and level='Middle'),
 
-(select id from project where starte_date='2023-03-01', select id from worker where name='Petro'),
-(select id from project where starte_date='2023-03-01', select id from worker where name='Yaroslav'),
+(select id from project where starte_date='2023-03-01', select id from worker where name='Petro' and level='Middle'),
+(select id from project where starte_date='2023-03-01', select id from worker where name='Yaroslav' and level='Senior'),
 
-(select id from project where starte_date='2023-04-15', select id from worker where name='Oleksandr'),
+(select id from project where starte_date='2023-04-15', select id from worker where name='Oleksandr' and level='Junior'),
 (select id from project where starte_date='2023-04-15', select id from worker where name='Bohdan' and level='Middle'),
 
-(select id from project where starte_date='2023-11-15', select id from worker where name='Oleksandr'),
-(select id from project where starte_date='2023-11-15', select id from worker where name='Petro'),
-(select id from project where starte_date='2023-11-15', select id from worker where name='Sofia'),
+(select id from project where starte_date='2023-11-15', select id from worker where name='Oleksandr' and level='Junior'),
+(select id from project where starte_date='2023-11-15', select id from worker where name='Petro' and level='Middle'),
+(select id from project where starte_date='2023-11-15', select id from worker where name='Sofia' and level='Middle'),
 (select id from project where starte_date='2023-11-15', select id from worker where name='Bohdan' and level='Middle'),
-(select id from project where starte_date='2023-11-15', select id from worker where name='Ivanna');
+(select id from project where starte_date='2023-11-15', select id from worker where name='Ivanna' and level='Senior');
