@@ -1,8 +1,9 @@
-package Query;
+package query;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.flywaydb.core.Flyway;
 
 import java.sql.*;
 
@@ -27,6 +28,22 @@ public enum Database {
             return connection;
         } catch (SQLException e) {
             throw new RuntimeException(e);
+        }
+    }
+
+    public void startMigration() {
+        Flyway flyway = Flyway.configure()
+                .locations("classpath:migrations")
+                .dataSource(Database.URL.getData(), Database.USER.getData(), Database.PASSWORD.getData())
+                .load();
+        flyway.migrate();
+    }
+
+    public static void closedConnection(Connection connection){
+        try (connection) {
+            System.out.println("Connection is closed!");
+        }  catch (SQLException e) {
+            e.printStackTrace();
         }
     }
 }

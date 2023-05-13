@@ -1,16 +1,19 @@
-package Query;
+package query;
 
-import LabelClasses.*;
+import labelClasses.*;
 
-import java.sql.*;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.time.LocalDate;
 import java.util.LinkedList;
 import java.util.List;
 
 
-public class DatabaseQueryService extends File {
+public class DatabaseQueryService extends FileReader {
     public List<MaxSalaryWorker> findMaxSalaryWorker(Connection connection) {
-        String sql = new DatabaseQueryService().readFile("src/main/resources/DB/find_max_salary_worker.sql");
+        String sql = new DatabaseQueryService().readFile("src/main/resources/db/find_max_salary_worker.sql");
         try (PreparedStatement statement = connection.prepareStatement(sql);
              ResultSet rs = statement.executeQuery();
              connection) {
@@ -26,7 +29,7 @@ public class DatabaseQueryService extends File {
     }
 
     public List<MaxProjectsClient> findMaxProjectsClient(Connection connection) {
-        String sql = new DatabaseQueryService().readFile("src/main/resources/DB/find_max_projects_client.sql");
+        String sql = new DatabaseQueryService().readFile("src/main/resources/db/find_max_projects_client.sql");
         try (PreparedStatement statement = connection.prepareStatement(sql);
              ResultSet rs = statement.executeQuery();
              connection) {
@@ -41,7 +44,7 @@ public class DatabaseQueryService extends File {
     }
 
     public List<LongestProject> findLongestProject(Connection connection) {
-        String sql = new DatabaseQueryService().readFile("src/main/resources/DB/find_longest_project.sql");
+        String sql = new DatabaseQueryService().readFile("src/main/resources/db/find_longest_project.sql");
         try (PreparedStatement statement = connection.prepareStatement(sql);
              ResultSet rs = statement.executeQuery();
              connection) {
@@ -56,7 +59,7 @@ public class DatabaseQueryService extends File {
     }
 
     public List<YoungestEldestWorkers> findYoungestEldestWorkers(Connection connection) {
-        String sql = new DatabaseQueryService().readFile("src/main/resources/DB/find_youngest_eldest_workers.sql");
+        String sql = new DatabaseQueryService().readFile("src/main/resources/db/find_youngest_eldest_workers.sql");
         try (PreparedStatement statement = connection.prepareStatement(sql);
              ResultSet rs = statement.executeQuery();
              connection) {
@@ -72,7 +75,7 @@ public class DatabaseQueryService extends File {
     }
 
     public List<ProjectPrices> findProjectPrices(Connection connection) {
-        String sql = new DatabaseQueryService().readFile("src/main/resources/DB/print_project_prices.sql");
+        String sql = new DatabaseQueryService().readFile("src/main/resources/db/print_project_prices.sql");
         try (PreparedStatement statement = connection.prepareStatement(sql);
              ResultSet rs = statement.executeQuery();
              connection) {

@@ -19,6 +19,8 @@ dependencies {
 
     testCompileOnly 'org.projectlombok:lombok:1.18.26'
     testAnnotationProcessor 'org.projectlombok:lombok:1.18.26'
+    implementation 'org.flywaydb:flyway-core:9.17.0'
+
 }
 
 jacoco {
