@@ -1,4 +1,4 @@
-package LabelClasses;
+package labelClasses;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;

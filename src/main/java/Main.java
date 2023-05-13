@@ -1,7 +1,7 @@
-import Query.Database;
+import query.Database;
 
 public class Main {
     public static void main(String[] args) {
-        Database.INSTANCE.getConnection();
+        Database.INSTANCE.startMigration();
     }
 }
