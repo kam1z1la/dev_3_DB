@@ -1,49 +1,34 @@
 package query;
 
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import entity.Client;
+import entity.Planet;
 import org.flywaydb.core.Flyway;
+import org.hibernate.SessionFactory;
+import org.hibernate.cfg.Configuration;
 
-import java.sql.*;
+import java.util.Properties;
 
 
-@AllArgsConstructor
-@NoArgsConstructor
-@Getter
 public enum Database {
-    INSTANCE,
-    URL("jdbc:h2:D:/H2/dv_3_DV"),
-    USER("admin"),
-    PASSWORD("12345");
+    INSTANCE;
 
-    private String data;
-
-    public Connection getConnection() {
-        try {
-            Connection connection = DriverManager.getConnection(Database.URL.getData(), Database.USER.getData(), Database.PASSWORD.getData());
-            Statement statement = connection.createStatement();
-            System.out.println("The database is running: " + !statement.isClosed());
-            statement.close();
-            return connection;
-        } catch (SQLException e) {
-            throw new RuntimeException(e);
-        }
+    public SessionFactory getConnection() {
+       return new Configuration()
+                .addAnnotatedClass(Client.class)
+                .addAnnotatedClass(Planet.class)
+                .buildSessionFactory();
     }
 
     public void startMigration() {
+        Properties properties = new Reader()
+                .readPropertiesFile("src/main/resources/hibernate.properties");
+
         Flyway flyway = Flyway.configure()
                 .locations("classpath:migrations")
-                .dataSource(Database.URL.getData(), Database.USER.getData(), Database.PASSWORD.getData())
+                .dataSource(properties.getProperty("hibernate.connection.url"),
+                        properties.getProperty("hibernate.connection.username"),
+                        properties.getProperty("hibernate.connection.password"))
                 .load();
         flyway.migrate();
-    }
-
-    public static void closedConnection(Connection connection){
-        try (connection) {
-            System.out.println("Connection is closed!");
-        }  catch (SQLException e) {
-            e.printStackTrace();
-        }
     }
 }
