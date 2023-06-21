@@ -1,1 +1,0 @@
-drop table if exists project_worker,project,worker,client;
