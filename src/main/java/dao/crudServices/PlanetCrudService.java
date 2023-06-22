@@ -14,12 +14,11 @@ public class PlanetCrudService implements Service<Planet> {
     private Transaction transaction = null;
 
     @Override
-    public void create(Object ... newData) {
+    public void create(Planet entityClass, Object... newData) {
         try (Session session = Database.INSTANCE.getConnection().openSession()) {
             transaction = session.beginTransaction();
-            Planet planet = new Planet(newData[0].toString(), newData[1].toString());
-            session.persist(planet);
-            System.out.printf("[INFO] Create new object: %s\r\n", planet);
+            entityClass = new Planet(newData[0].toString(), newData[1].toString());
+            session.persist(entityClass);
             session.flush();
             transaction.commit();
         } catch (Exception e) {
@@ -31,7 +30,7 @@ public class PlanetCrudService implements Service<Planet> {
     @Override
     public List<Planet> showAll() {
         try (Session session = Database.INSTANCE.getConnection().openSession()) {
-            return  session.createQuery("from Planet", Planet.class)
+            return session.createQuery("from Planet", Planet.class)
                     .list();
         } catch (Exception e) {
             e.printStackTrace();
@@ -40,13 +39,12 @@ public class PlanetCrudService implements Service<Planet> {
     }
 
     @Override
-    public void update(Object id, Object ... newData) {
+    public <K> void update(Planet entityClass, K id, Object... newData) {
         try (Session session = Database.INSTANCE.getConnection().openSession()) {
             transaction = session.beginTransaction();
-            Planet planet = session.get(Planet.class, id);
-            planet.setName(newData[0].toString());
-            session.merge(planet);
-            System.out.printf("[INFO] Update object: %s\r\n", planet);
+            entityClass = session.get(Planet.class, id);
+            entityClass.setName(newData[0].toString());
+            session.merge(entityClass);
             session.flush();
             transaction.commit();
         } catch (Exception e) {
@@ -56,13 +54,12 @@ public class PlanetCrudService implements Service<Planet> {
     }
 
     @Override
-    public void deleteById(Object id) {
+    public <K> void deleteById(K id) {
         try (Session session = Database.INSTANCE.getConnection().openSession()) {
             transaction = session.beginTransaction();
             Planet planet = session.get(Planet.class, id);
-            if(Optional.ofNullable(planet).isPresent()) {
+            if (Optional.ofNullable(planet).isPresent()) {
                 session.remove(planet);
-                System.out.printf("[INFO] Remove object: %s\r\n", planet);
                 session.flush();
                 transaction.commit();
             } else {
@@ -74,12 +71,13 @@ public class PlanetCrudService implements Service<Planet> {
         }
     }
 
+
     public static void main(String[] args) {
         PlanetCrudService planetService = new PlanetCrudService();
         System.out.println("[INFO] Show all data: \n" + planetService.showAll());
-        planetService.create("EARTH", "Земля");
+        planetService.create(new Planet(),"EARTH", "Земля");
         System.out.println("[INFO] Show all data: \n" + planetService.showAll());
-        planetService.update("EARTH",  "земля");
+        planetService.update(new Planet(),"EARTH", "земля");
         System.out.println("[INFO] Show all data: \n" + planetService.showAll());
         planetService.deleteById("EARTH");
         System.out.println("[INFO] Show all data: \n" + planetService.showAll());

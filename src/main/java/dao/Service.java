@@ -3,8 +3,8 @@ package dao;
 import java.util.List;
 
 public interface Service<T> {
-    void create(Object ... newData);
+    void create(T entityClass, Object ... newData);
     List<T> showAll();
-    void update(Object id, Object ... newData);
-    void deleteById(Object id);
+    <K> void update(T entityClass, K id, Object ... newData);
+    <K> void deleteById(K id);
 }
