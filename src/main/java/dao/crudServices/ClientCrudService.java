@@ -13,13 +13,12 @@ public class ClientCrudService implements Service<Client> {
     private Transaction transaction = null;
 
     @Override
-    public void create(Object... newData) {
+    public void create(Client entityClass, Object... newData) {
         try (Session session = Database.INSTANCE.getConnection().openSession()) {
             transaction = session.beginTransaction();
-            Client client = new Client();
-            client.setName(newData[0].toString());
-            session.persist(client);
-            System.out.printf("[INFO] Create new object: %s\r\n", client);
+            entityClass = new Client();
+            entityClass.setName(newData[0].toString());
+            session.persist(entityClass);
             session.flush();
             transaction.commit();
         } catch (Exception e) {
@@ -42,14 +41,13 @@ public class ClientCrudService implements Service<Client> {
     }
 
     @Override
-    public void update(Object id, Object... newData) {
+    public <K> void update(Client entityClass, K id, Object... newData) {
         try (Session session = Database.INSTANCE.getConnection().openSession()) {
-            Client client = session.get(Client.class, id);
+            entityClass = session.get(Client.class, id);
             if (Optional.ofNullable(id).isPresent()) {
-                client.setName(newData[0].toString());
+                entityClass.setName(newData[0].toString());
                 transaction = session.beginTransaction();
-                session.merge(client);
-                System.out.printf("[INFO] Update object: %s\r\n", client);
+                session.merge(entityClass);
                 session.flush();
                 transaction.commit();
             } else {
@@ -64,13 +62,12 @@ public class ClientCrudService implements Service<Client> {
     }
 
     @Override
-    public void deleteById(Object id) {
+    public <K> void deleteById(K id) {
         try (Session session = Database.INSTANCE.getConnection().openSession()) {
             Client client = session.get(Client.class, id);
             transaction = session.beginTransaction();
             if (Optional.ofNullable(session.get(Client.class, id)).isPresent()) {
                 session.remove(client);
-                System.out.printf("[INFO] Remove object: %s\r\n", client);
                 session.flush();
                 transaction.commit();
             } else {
@@ -84,12 +81,11 @@ public class ClientCrudService implements Service<Client> {
         }
     }
 
-    protected Object getIdByName(String name) {
+    protected Integer getIdByName(String name) {
         try (Session session = Database.INSTANCE.getConnection().openSession()) {
             Client client = (Client) session.createQuery("from Client ñ " +
                              "where ñ.name = :name").setParameter("name", name)
                     .uniqueResult();
-            System.out.printf("[INFO] Find object: %s\r\n", client.getId());
             return client.getId();
         } catch (Exception e) {
             e.printStackTrace();
@@ -101,9 +97,9 @@ public class ClientCrudService implements Service<Client> {
     public static void main(String[] args) {
         ClientCrudService clientService = new ClientCrudService();
         System.out.println("[INFO] Show all data: \n" + clientService.showAll());
-        clientService.create("Anton Mychacho");
+        clientService.create(new Client(), "Anton Mychacho");
         System.out.println("[INFO] Show all data: \n" + clientService.showAll());
-        clientService.update(clientService.getIdByName("Anton Mychacho") ,"Stepan Mychacho");
+        clientService.update(new Client(), clientService.getIdByName("Anton Mychacho") ,"Stepan Mychacho");
         System.out.println("[INFO] Show all data: \n" + clientService.showAll());
         clientService.deleteById(clientService.getIdByName("Stepan Mychacho"));
         System.out.println("[INFO] Show all data: \n" + clientService.showAll());
