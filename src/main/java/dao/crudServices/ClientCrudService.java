@@ -2,6 +2,7 @@ package dao.crudServices;
 
 import dao.Service;
 import entity.Client;
+import entity.Planet;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
 import query.Database;
@@ -13,11 +14,9 @@ public class ClientCrudService implements Service<Client> {
     private Transaction transaction = null;
 
     @Override
-    public void create(Client entityClass, Object... newData) {
+    public void create(Client entityClass) {
         try (Session session = Database.INSTANCE.getConnection().openSession()) {
             transaction = session.beginTransaction();
-            entityClass = new Client();
-            entityClass.setName(newData[0].toString());
             session.persist(entityClass);
             session.flush();
             transaction.commit();
@@ -41,37 +40,32 @@ public class ClientCrudService implements Service<Client> {
     }
 
     @Override
-    public <K> void update(Client entityClass, K id, Object... newData) {
+    public boolean update(Client entityClass) {
         try (Session session = Database.INSTANCE.getConnection().openSession()) {
-            entityClass = session.get(Client.class, id);
-            if (Optional.ofNullable(id).isPresent()) {
-                entityClass.setName(newData[0].toString());
-                transaction = session.beginTransaction();
-                session.merge(entityClass);
-                session.flush();
-                transaction.commit();
-            } else {
-                System.out.println("Don't find id:");
-            }
+            transaction = session.beginTransaction();
+            session.merge(entityClass);
+            session.flush();
+            transaction.commit();
+            return true;
         } catch (Exception e) {
             if (transaction != null) {
                 transaction.rollback();
             }
             e.printStackTrace();
         }
+        return false;
     }
 
     @Override
-    public <K> void deleteById(K id) {
+    public boolean delete(Client entityClass) {
         try (Session session = Database.INSTANCE.getConnection().openSession()) {
-            Client client = session.get(Client.class, id);
-            transaction = session.beginTransaction();
-            if (Optional.ofNullable(session.get(Client.class, id)).isPresent()) {
+            Client client = session.find(Client.class, entityClass.getId());
+            if (Optional.ofNullable(client).isPresent()) {
+                transaction = session.beginTransaction();
                 session.remove(client);
                 session.flush();
                 transaction.commit();
-            } else {
-                System.out.println("[INFO] Don't find id:");
+                return true;
             }
         } catch (Exception e) {
             e.printStackTrace();
@@ -79,29 +73,20 @@ public class ClientCrudService implements Service<Client> {
                 transaction.rollback();
             }
         }
-    }
-
-    protected Integer getIdByName(String name) {
-        try (Session session = Database.INSTANCE.getConnection().openSession()) {
-            Client client = (Client) session.createQuery("from Client ñ " +
-                             "where ñ.name = :name").setParameter("name", name)
-                    .uniqueResult();
-            return client.getId();
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        System.out.println("[INFO] Don't find id:");
-        return -1;
+        return false;
     }
 
     public static void main(String[] args) {
         ClientCrudService clientService = new ClientCrudService();
+        Client client = new Client();
+        client.setName("Anton Mychacho");
         System.out.println("[INFO] Show all data: \n" + clientService.showAll());
-        clientService.create(new Client(), "Anton Mychacho");
+        clientService.create(client);
         System.out.println("[INFO] Show all data: \n" + clientService.showAll());
-        clientService.update(new Client(), clientService.getIdByName("Anton Mychacho") ,"Stepan Mychacho");
+        client.setName("Stepan Mychacho");
+        clientService.update(client);
         System.out.println("[INFO] Show all data: \n" + clientService.showAll());
-        clientService.deleteById(clientService.getIdByName("Stepan Mychacho"));
+        clientService.delete(client);
         System.out.println("[INFO] Show all data: \n" + clientService.showAll());
     }
 }

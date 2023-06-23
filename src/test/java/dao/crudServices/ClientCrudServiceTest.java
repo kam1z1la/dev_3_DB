@@ -1,5 +1,6 @@
 package dao.crudServices;
 
+import entity.Client;
 import org.junit.jupiter.api.Order;
 import org.junit.jupiter.api.Test;
 
@@ -7,11 +8,13 @@ import static org.junit.jupiter.api.Assertions.*;
 
 class ClientCrudServiceTest {
     ClientCrudService clientService = new ClientCrudService();
+    Client client = new Client();
 
     @Test
     @Order(1)
     void testCreate() {
-        assertDoesNotThrow(() -> clientService.create("Anton Mychacho"));
+        client.setName("Anton Mychacho");
+        assertDoesNotThrow(() -> clientService.create(client));
     }
 
     @Test
@@ -20,23 +23,20 @@ class ClientCrudServiceTest {
     }
 
     @Test
-    void testCorrectMethodGetIdByName() {
-        assertDoesNotThrow(() ->  clientService.getIdByName("Anton Mychacho"));
+    void testWrongMethodDelete() {
+        assertFalse(clientService.delete(new Client(-1, "Anatoliy")));
     }
 
     @Test
-    void testWrongMethodGetIdByName() {
-        assertEquals(clientService.getIdByName(" "), -1);
-    }
-
-    @Test
-    void testCorrectMethodDeleteById() {
-        assertDoesNotThrow(() -> clientService.deleteById(clientService.getIdByName("Stepan Mychacho")));
+    void testCorrectMethodDelete() {
+        client.setName("Anton Mychacho");
+        assertDoesNotThrow(() -> clientService.create(client));
+        assertTrue(clientService.delete(client));
     }
 
     @Test
     void testCorrectMethodUpdate() {
-        assertDoesNotThrow(() -> clientService.update(clientService.getIdByName("Anton Mychacho"),
-                "Stepan Mychacho"));
+        client.setName("Stepan Mychacho");
+        assertDoesNotThrow(() -> clientService.update(client));
     }
 }
