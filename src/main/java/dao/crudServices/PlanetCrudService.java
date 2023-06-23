@@ -14,10 +14,9 @@ public class PlanetCrudService implements Service<Planet> {
     private Transaction transaction = null;
 
     @Override
-    public void create(Planet entityClass, Object... newData) {
+    public void create(Planet entityClass) {
         try (Session session = Database.INSTANCE.getConnection().openSession()) {
             transaction = session.beginTransaction();
-            entityClass = new Planet(newData[0].toString(), newData[1].toString());
             session.persist(entityClass);
             session.flush();
             transaction.commit();
@@ -39,47 +38,52 @@ public class PlanetCrudService implements Service<Planet> {
     }
 
     @Override
-    public <K> void update(Planet entityClass, K id, Object... newData) {
+    public boolean update(Planet entityClass) {
         try (Session session = Database.INSTANCE.getConnection().openSession()) {
             transaction = session.beginTransaction();
-            entityClass = session.get(Planet.class, id);
-            entityClass.setName(newData[0].toString());
             session.merge(entityClass);
             session.flush();
             transaction.commit();
+            return true;
         } catch (Exception e) {
             e.printStackTrace();
-            Objects.requireNonNull(transaction).rollback();
+            if (transaction != null) {
+                transaction.rollback();
+            }
         }
+        return false;
     }
 
     @Override
-    public <K> void deleteById(K id) {
+    public boolean delete(Planet entityClass) {
         try (Session session = Database.INSTANCE.getConnection().openSession()) {
-            transaction = session.beginTransaction();
-            Planet planet = session.get(Planet.class, id);
+            Planet planet = session.find(Planet.class, entityClass.getId());
             if (Optional.ofNullable(planet).isPresent()) {
+                transaction = session.beginTransaction();
                 session.remove(planet);
                 session.flush();
                 transaction.commit();
-            } else {
-                System.out.println("Don't find id:");
+                return true;
             }
         } catch (Exception e) {
             e.printStackTrace();
-            Objects.requireNonNull(transaction).rollback();
+            if (transaction != null) {
+                transaction.rollback();
+            }
         }
+        return false;
     }
-
 
     public static void main(String[] args) {
         PlanetCrudService planetService = new PlanetCrudService();
+        Planet planet = new Planet("EARTH", "Земля");
         System.out.println("[INFO] Show all data: \n" + planetService.showAll());
-        planetService.create(new Planet(),"EARTH", "Земля");
+        planetService.create(planet);
         System.out.println("[INFO] Show all data: \n" + planetService.showAll());
-        planetService.update(new Planet(),"EARTH", "земля");
+        planet.setName("Earth");
+        System.out.println("planetService.update(planet) = " + planetService.update(planet));
         System.out.println("[INFO] Show all data: \n" + planetService.showAll());
-        planetService.deleteById("EARTH");
+        System.out.println("Delete: " + planetService.delete(planet));
         System.out.println("[INFO] Show all data: \n" + planetService.showAll());
     }
 }
