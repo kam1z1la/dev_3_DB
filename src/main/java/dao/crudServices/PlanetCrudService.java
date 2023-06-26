@@ -76,14 +76,16 @@ public class PlanetCrudService implements Service<Planet> {
 
     public static void main(String[] args) {
         PlanetCrudService planetService = new PlanetCrudService();
-        Planet planet = new Planet("EARTH", "Земля");
-        System.out.println("[INFO] Show all data: \n" + planetService.showAll());
-        planetService.create(planet);
-        System.out.println("[INFO] Show all data: \n" + planetService.showAll());
-        planet.setName("Earth");
-        System.out.println("planetService.update(planet) = " + planetService.update(planet));
-        System.out.println("[INFO] Show all data: \n" + planetService.showAll());
-        System.out.println("Delete: " + planetService.delete(planet));
+//        Planet planet = new Planet();
+//        planet.setId("EARTH");
+//        planet.setName("Земля");
+//        System.out.println("[INFO] Show all data: \n" + planetService.showAll());
+//        planetService.create(planet);
+//        System.out.println("[INFO] Show all data: \n" + planetService.showAll());
+//        planet.setName("Earth");
+//        System.out.println("planetService.update(planet) = " + planetService.update(planet));
+//        System.out.println("[INFO] Show all data: \n" + planetService.showAll());
+//        System.out.println("Delete: " + planetService.delete(planet));
         System.out.println("[INFO] Show all data: \n" + planetService.showAll());
     }
 }
