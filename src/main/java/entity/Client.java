@@ -4,13 +4,18 @@ import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import lombok.ToString;
 import org.hibernate.validator.constraints.Length;
+
+import java.util.LinkedList;
+import java.util.List;
 
 @Entity
 @Table(name = "client")
 @AllArgsConstructor
 @NoArgsConstructor
 @Data
+@ToString
 public class Client {
     @Id
     @Column(name = "id")
@@ -21,11 +26,6 @@ public class Client {
     @Length(min = 3, max = 200, message = "Enter the word more for 3 and less for 200")
     private String name;
 
-    @Override
-    public String toString() {
-        return "{" +
-                "id=" + id +
-                ", name=" + name +
-                "}";
-    }
+    @OneToMany(mappedBy = "client", cascade = CascadeType.REMOVE, fetch = FetchType.LAZY)
+    private List<Ticket> ticket = new LinkedList<>();
 }

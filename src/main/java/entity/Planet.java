@@ -4,8 +4,12 @@ import jakarta.persistence.*;
 import jakarta.validation.constraints.Pattern;
 import lombok.AllArgsConstructor;
 import lombok.NoArgsConstructor;
+import lombok.ToString;
 import org.hibernate.validator.constraints.Length;
 import lombok.Data;
+
+import java.util.LinkedList;
+import java.util.List;
 
 
 @Entity
@@ -13,6 +17,7 @@ import lombok.Data;
 @AllArgsConstructor
 @NoArgsConstructor
 @Data
+@ToString
 public class Planet {
     @Id
     @Column(name = "id")
@@ -23,11 +28,9 @@ public class Planet {
     @Length(min = 1, max = 500, message = "Enter the word more for 1 and less for 500")
     private String name;
 
-    @Override
-    public String toString() {
-        return "{" +
-                "id=" + id +
-                ", name=" + name +
-                "}";
-    }
+    @OneToMany(mappedBy = "from_planet", cascade = CascadeType.REMOVE, fetch = FetchType.LAZY)
+    private List<Ticket> ticketFromPlanet = new LinkedList<>();
+
+    @OneToMany(mappedBy = "to_planet", cascade = CascadeType.REMOVE, fetch = FetchType.LAZY)
+    private List<Ticket> ticketToPlanet = new LinkedList<>();
 }
