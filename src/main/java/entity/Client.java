@@ -15,7 +15,7 @@ import java.util.List;
 @AllArgsConstructor
 @NoArgsConstructor
 @Data
-@ToString
+@ToString(exclude = {"ticket"})
 public class Client {
     @Id
     @Column(name = "id")
@@ -26,6 +26,6 @@ public class Client {
     @Length(min = 3, max = 200, message = "Enter the word more for 3 and less for 200")
     private String name;
 
-    @OneToMany(mappedBy = "client", cascade = CascadeType.REMOVE, fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "client", cascade = CascadeType.REMOVE)
     private List<Ticket> ticket = new LinkedList<>();
 }
