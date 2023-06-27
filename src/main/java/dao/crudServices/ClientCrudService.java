@@ -31,7 +31,7 @@ public class ClientCrudService implements Service<Client> {
     @Override
     public List<Client> showAll() {
         try (Session session = Database.INSTANCE.getConnection().openSession()) {
-            return session.createQuery("SELECT c FROM Client c JOIN FETCH c.ticket", Client.class)
+            return session.createQuery("FROM Client", Client.class)
                     .list();
         } catch (Exception e) {
             e.printStackTrace();
@@ -79,14 +79,14 @@ public class ClientCrudService implements Service<Client> {
     public static void main(String[] args) {
         ClientCrudService clientService = new ClientCrudService();
         Client client = new Client();
-//        client.setName("Anton Mychacho");
-//        System.out.println("[INFO] Show all data: \n" + clientService.showAll());
-//        clientService.create(client);
-//        System.out.println("[INFO] Show all data: \n" + clientService.showAll());
-//        client.setName("Stepan Mychacho");
-//        clientService.update(client);
-//        System.out.println("[INFO] Show all data: \n" + clientService.showAll());
-//        clientService.delete(client);
+        client.setName("Anton Mychacho");
+        System.out.println("[INFO] Show all data: \n" + clientService.showAll());
+        clientService.create(client);
+        System.out.println("[INFO] Show all data: \n" + clientService.showAll());
+        client.setName("Stepan Mychacho");
+        clientService.update(client);
+        System.out.println("[INFO] Show all data: \n" + clientService.showAll());
+        clientService.delete(client);
         System.out.println("[INFO] Show all data: \n" + clientService.showAll());
     }
 }

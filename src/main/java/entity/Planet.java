@@ -17,7 +17,7 @@ import java.util.List;
 @AllArgsConstructor
 @NoArgsConstructor
 @Data
-@ToString
+@ToString(exclude = {"ticketFromPlanet", "ticketToPlanet"})
 public class Planet {
     @Id
     @Column(name = "id")
@@ -28,9 +28,9 @@ public class Planet {
     @Length(min = 1, max = 500, message = "Enter the word more for 1 and less for 500")
     private String name;
 
-    @OneToMany(mappedBy = "from_planet", cascade = CascadeType.REMOVE, fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "from_planet", cascade = CascadeType.REMOVE)
     private List<Ticket> ticketFromPlanet = new LinkedList<>();
 
-    @OneToMany(mappedBy = "to_planet", cascade = CascadeType.REMOVE, fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "to_planet", cascade = CascadeType.REMOVE)
     private List<Ticket> ticketToPlanet = new LinkedList<>();
 }
